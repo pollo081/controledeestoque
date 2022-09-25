@@ -1,16 +1,22 @@
-use controledeestoque -- tabela cliente
+use controledeestoque
+
+-- tabela cliente
 create table cliente(
 	cod_cli int primary key identity (1, 1) not null,
 	nom_cli varchar (50) not null,
 	cpf_cli bigint not null,
 	cel_cli bigint not null
-) -- tabela fornecedor
+)
+
+-- tabela fornecedor
 create table fornecedor(
 	cod_for int primary key identity (1, 1) not null,
 	nom_for varchar (50),
 	fon_for bigint not null,
 	ema_for varchar (50)
-) -- tabela produto
+)
+
+-- tabela produto
 create table produto(
 	cod_pro int primary key identity (1, 1) not null,
 	nom_pro varchar (60) not null,
@@ -21,7 +27,9 @@ create table produto(
 	pre_cus_pro decimal (8, 2),
 	uni_pro varchar(3),
 	cod_for int not null
-) -- tabela movimentacao
+)
+
+-- tabela movimentacao
 create table movimentacao(
 	cod_mov int primary key identity (1, 1) not null,
 	cod_cli int not null,
@@ -29,29 +37,39 @@ create table movimentacao(
 	tip_mov varchar (1),
 	tot_mov decimal (8, 2),
 	des_mov decimal (8, 2)
-) -- tabela movimentacao_item
+)
+
+-- tabela movimentacao_item
 create table movimentacao_item(
 	cod_mov_ite int primary key identity (1, 1) not null,
 	cod_mov int not null,
 	cod_pro int not null,
 	qtd_mov_ite int not null
-) -- relacionando cliente + movimentacao
-alter table
-	movimentacao
-add
-	constraint fk_nom_cli foreign key(cod_cli) references cliente(cod_cli) -- relacionando movimentacao_item + movimentacao
-alter table
-	movimentacao_item
-add
-	constraint fk_cod_mov foreign key(cod_mov) references movimentacao(cod_mov) -- relacionando movimentacao_item + produto
+)
+
+-- relacionando cliente + movimentacao
+alter table	movimentacao
+	add	constraint fk_nom_cli foreign key(cod_cli) references cliente(cod_cli)
+	
+-- relacionando movimentacao_item + movimentacao
 alter table
 	movimentacao_item
 add
-	constraint fk_nom_pro foreign key(cod_pro) references produto(cod_pro) -- relacionando produto + fornecedor
+	constraint fk_cod_mov foreign key(cod_mov) references movimentacao(cod_mov)
+	
+-- relacionando movimentacao_item + produto
+alter table
+	movimentacao_item
+add
+	constraint fk_nom_pro foreign key(cod_pro) references produto(cod_pro)
+	
+-- relacionando produto + fornecedor
 alter table
 	produto
 add
-	constraint fk_nom_for foreign key(cod_for) references fornecedor(cod_for) -- dados cliente
+	constraint fk_nom_for foreign key(cod_for) references fornecedor(cod_for)
+	
+-- dados cliente
 insert into
 	cliente
 values
@@ -83,7 +101,9 @@ values
 insert into
 	cliente
 values
-('Hugo Nelson Silva', 20938960939, 11982785858) -- dados fornecedor
+('Hugo Nelson Silva', 20938960939, 11982785858) 
+
+-- dados fornecedor
 insert into
 	fornecedor
 values
@@ -107,7 +127,9 @@ values
 insert INTO
 	fornecedor
 values
-('LG', 98991788993) -- dados produto
+('LG', 98991788993) 
+
+-- dados produto
 insert into
 	produto
 values
@@ -167,4 +189,5 @@ values
 		745,
 		624750,
 		735
-	) -- dados movimentacao
+	) 
+	
