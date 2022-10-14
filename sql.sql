@@ -1,5 +1,4 @@
 use controledeestoque
-
 -- tabela cliente
 create table cliente(
 	cod_cli int primary key identity (1, 1) not null,
@@ -25,7 +24,7 @@ create table produto(
 	est_sal_pro int not null,
 	pre_ven_pro decimal (8, 2),
 	pre_cus_pro decimal (8, 2),
-	uni_pro varchar(3),
+	uni_pro int,
 	cod_for int not null
 )
 
@@ -47,29 +46,28 @@ create table movimentacao_item(
 	qtd_mov_ite int not null
 )
 
--- relacionando cliente + movimentacao
-alter table	movimentacao
-	add	constraint fk_nom_cli foreign key(cod_cli) references cliente(cod_cli)
-	
--- relacionando movimentacao_item + movimentacao
-alter table
-	movimentacao_item
-add
-	constraint fk_cod_mov foreign key(cod_mov) references movimentacao(cod_mov)
-	
--- relacionando movimentacao_item + produto
-alter table
-	movimentacao_item
-add
-	constraint fk_nom_pro foreign key(cod_pro) references produto(cod_pro)
-	
--- relacionando produto + fornecedor
-alter table
-	produto
-add
-	constraint fk_nom_for foreign key(cod_for) references fornecedor(cod_for)
-	
--- dados cliente
+alter table produto
+    alter column uni_pro decimal(8,2) null
+
+
+	--relacionando
+alter table movimentacao
+	add constraint fk_cod_mov foreign key (cod_cli)
+		references cliente(cod_cli)
+
+alter table movimentacao_item
+	add constraint fk_cod_mov_it foreign key (cod_mov)
+		references movimentacao (cod_mov)
+		
+alter table movimentacao_item
+	add constraint fk_cod_pro foreign key (cod_pro)
+		references  produto (cod_pro)
+
+alter table produto
+	add constraint fk_cod_for foreign key (cod_for)
+		references fornecedor (cod_for)
+
+    -- dados cliente
 insert into
 	cliente
 values
@@ -102,16 +100,17 @@ insert into
 	cliente
 values
 ('Hugo Nelson Silva', 20938960939, 11982785858) 
+select * from cliente
 
 -- dados fornecedor
 insert into
 	fornecedor
 values
-('Logitech', 08008914173)
+('Logitech', 08008914173, null)
 insert into
 	fornecedor
 values
-('redragon', 1131649109)
+('redragon', 1131649109, null)
 insert into
 	fornecedor
 values
@@ -123,11 +122,11 @@ values
 insert into
 	fornecedor
 values
-('razer', 17604488997)
+('razer', 17604488997, null)
 insert INTO
 	fornecedor
 values
-('LG', 98991788993) 
+('LG', 98991788993, null) 
 
 -- dados produto
 insert into
@@ -140,7 +139,8 @@ values
 		982,
 		169.00,
 		300000,
-		150
+		150,
+        1
 	)
 insert into
 	produto
@@ -152,7 +152,8 @@ values
 		824,
 		349.90,
 		496485,
-		330.99
+		330.99,
+        2
 	)
 insert into
 	produto
@@ -164,7 +165,8 @@ values
 		136,
 		999,
 		296997,
-		989.99
+		989.99,
+        3
 	)
 insert into
 	produto
@@ -176,7 +178,8 @@ values
 		102,
 		1799,
 		320000,
-		1600
+		1600,
+        3
 	)
 insert into
 	produto
@@ -188,6 +191,57 @@ values
 		322,
 		745,
 		624750,
-		735
+		735,
+        4
 	) 
-	
+
+-- dados movimentacao
+insert into movimentacao
+    values (1,getdate(),'s',1,1)
+
+insert into movimentacao
+    values (2,getdate(),'e',15,1)
+
+insert into movimentacao
+    values (3,getdate(),'s',1,1)
+
+insert into movimentacao
+    values (4,getdate(),'s',1,1)
+
+insert into movimentacao
+    values (5,getdate(),'s',1,1)
+
+-- dados movimentacao_item
+insert into movimentacao_item
+    values (1,1,1)
+
+insert into movimentacao_item
+    values (2,2,15)
+
+insert into movimentacao_item
+    values (3,3,1)
+
+insert into movimentacao_item
+    values (4,4,1)
+
+insert into movimentacao_item
+    values (5,5,1) 
+
+
+
+select  c.nom_cli as nome,
+        p.nom_pro as produto,
+        f.nom_for as fornecedor,
+        m.tip_mov as tipomov,
+        m.dat_mov as data,
+        mi.qtd_mov_ite as quantidade
+from cliente c, produto p, fornecedor f, movimentacao m, movimentacao_item mi
+	where c.cod_cli = m.cod_cli
+		and m.cod_mov = mi.cod_mov
+		and p.cod_pro = mi.cod_pro
+		and f.cod_for = p.cod_for
+
+
+
+
+
