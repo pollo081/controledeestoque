@@ -1,21 +1,16 @@
-use controledeestoque
--- tabela cliente
+use controledeestoque -- tabela cliente
 create table cliente(
 	cod_cli int primary key identity (1, 1) not null,
 	nom_cli varchar (50) not null,
 	cpf_cli bigint not null,
 	cel_cli bigint not null
-)
-
--- tabela fornecedor
+) -- tabela fornecedor
 create table fornecedor(
 	cod_for int primary key identity (1, 1) not null,
 	nom_for varchar (50),
 	fon_for bigint not null,
 	ema_for varchar (50)
-)
-
--- tabela produto
+) -- tabela produto
 create table produto(
 	cod_pro int primary key identity (1, 1) not null,
 	nom_pro varchar (60) not null,
@@ -26,9 +21,7 @@ create table produto(
 	pre_cus_pro decimal (8, 2),
 	uni_pro int,
 	cod_for int not null
-)
-
--- tabela movimentacao
+) -- tabela movimentacao
 create table movimentacao(
 	cod_mov int primary key identity (1, 1) not null,
 	cod_cli int not null,
@@ -36,46 +29,41 @@ create table movimentacao(
 	tip_mov varchar (1),
 	tot_mov decimal (8, 2),
 	des_mov decimal (8, 2)
-)
-
--- tabela movimentacao_item
+) -- tabela movimentacao_item
 create table movimentacao_item(
 	cod_mov_ite int primary key identity (1, 1) not null,
 	cod_mov int not null,
 	cod_pro int not null,
 	qtd_mov_ite int not null
 )
-
-alter table produto
-    alter column uni_pro decimal(8,2) null
-
-
-	--relacionando
-alter table movimentacao
-	add constraint fk_cod_mov foreign key (cod_cli)
-		references cliente(cod_cli)
-
-alter table movimentacao_item
-	add constraint fk_cod_mov_it foreign key (cod_mov)
-		references movimentacao (cod_mov)
-		
-alter table movimentacao_item
-	add constraint fk_cod_pro foreign key (cod_pro)
-		references  produto (cod_pro)
-
-alter table produto
-	add constraint fk_cod_for foreign key (cod_for)
-		references fornecedor (cod_for)
-
-    -- dados cliente
+alter table
+	produto
+alter column
+	uni_pro decimal(8, 2) null --relacionando
+alter table
+	movimentacao
+add
+	constraint fk_cod_mov foreign key (cod_cli) references cliente(cod_cli)
+alter table
+	movimentacao_item
+add
+	constraint fk_cod_mov_it foreign key (cod_mov) references movimentacao (cod_mov)
+alter table
+	movimentacao_item
+add
+	constraint fk_cod_pro foreign key (cod_pro) references produto (cod_pro)
+alter table
+	produto
+add
+	constraint fk_cod_for foreign key (cod_for) references fornecedor (cod_for) -- dados cliente
 insert into
 	cliente
 values
-('Gilberto Carlos', 69846943024, 11993145945)
+	('Gilberto Carlos', 69846943024, 11993145945)
 insert into
 	cliente
 values
-(
+	(
 		'Kaique Yuri Corte Real',
 		87918538269,
 		119952070826
@@ -83,7 +71,7 @@ values
 insert into
 	cliente
 values
-(
+	(
 		'Camila Natália Nicole da Rosa',
 		50750736461,
 		17991241817
@@ -91,7 +79,7 @@ values
 insert into
 	cliente
 values
-(
+	(
 		'Mirella Luana Fabiana Lope',
 		04942438055,
 		17991784938
@@ -99,22 +87,23 @@ values
 insert into
 	cliente
 values
-('Hugo Nelson Silva', 20938960939, 11982785858) 
-select * from cliente
-
--- dados fornecedor
+	('Hugo Nelson Silva', 20938960939, 11982785858)
+select
+	*
+from
+	cliente -- dados fornecedor
 insert into
 	fornecedor
 values
-('Logitech', 08008914173, null)
+	('Logitech', 08008914173, null)
 insert into
 	fornecedor
 values
-('redragon', 1131649109, null)
+	('redragon', 1131649109, null)
 insert into
 	fornecedor
 values
-(
+	(
 		'Samsung',
 		08005550000,
 		'atendimento@lojaonlinesamsung.com.br'
@@ -122,13 +111,11 @@ values
 insert into
 	fornecedor
 values
-('razer', 17604488997, null)
+	('razer', 17604488997, null)
 insert INTO
 	fornecedor
 values
-('LG', 98991788993, null) 
-
--- dados produto
+	('LG', 98991788993, null) -- dados produto
 insert into
 	produto
 values
@@ -140,7 +127,7 @@ values
 		169.00,
 		300000,
 		150,
-        1
+		1
 	)
 insert into
 	produto
@@ -153,7 +140,7 @@ values
 		349.90,
 		496485,
 		330.99,
-        2
+		2
 	)
 insert into
 	produto
@@ -166,7 +153,7 @@ values
 		999,
 		296997,
 		989.99,
-        3
+		3
 	)
 insert into
 	produto
@@ -179,7 +166,7 @@ values
 		1799,
 		320000,
 		1600,
-        3
+		3
 	)
 insert into
 	produto
@@ -192,56 +179,63 @@ values
 		745,
 		624750,
 		735,
-        4
-	) 
-
--- dados movimentacao
-insert into movimentacao
-    values (1,getdate(),'s',1,1)
-
-insert into movimentacao
-    values (2,getdate(),'e',15,1)
-
-insert into movimentacao
-    values (3,getdate(),'s',1,1)
-
-insert into movimentacao
-    values (4,getdate(),'s',1,1)
-
-insert into movimentacao
-    values (5,getdate(),'s',1,1)
-
--- dados movimentacao_item
-insert into movimentacao_item
-    values (1,1,1)
-
-insert into movimentacao_item
-    values (2,2,15)
-
-insert into movimentacao_item
-    values (3,3,1)
-
-insert into movimentacao_item
-    values (4,4,1)
-
-insert into movimentacao_item
-    values (5,5,1) 
-
-
-
-select  c.nom_cli as nome,
-        p.nom_pro as produto,
-        f.nom_for as fornecedor,
-        m.tip_mov as tipomov,
-        m.dat_mov as data,
-        mi.qtd_mov_ite as quantidade
-from cliente c, produto p, fornecedor f, movimentacao m, movimentacao_item mi
-	where c.cod_cli = m.cod_cli
-		and m.cod_mov = mi.cod_mov
-		and p.cod_pro = mi.cod_pro
-		and f.cod_for = p.cod_for
-
-
-
-
-
+		4
+	) -- dados movimentacao
+insert into
+	movimentacao
+values
+	(1, getdate(), 's', 1, 1)
+insert into
+	movimentacao
+values
+	(2, getdate(), 'e', 15, 1)
+insert into
+	movimentacao
+values
+	(3, getdate(), 's', 1, 1)
+insert into
+	movimentacao
+values
+	(4, getdate(), 's', 1, 1)
+insert into
+	movimentacao
+values
+	(5, getdate(), 's', 1, 1) -- dados movimentacao_item
+insert into
+	movimentacao_item
+values
+	(1, 1, 1)
+insert into
+	movimentacao_item
+values
+	(2, 2, 15)
+insert into
+	movimentacao_item
+values
+	(3, 3, 1)
+insert into
+	movimentacao_item
+values
+	(4, 4, 1)
+insert into
+	movimentacao_item
+values
+	(5, 5, 1)
+select
+	c.nom_cli as nome,
+	p.nom_pro as produto,
+	f.nom_for as fornecedor,
+	m.tip_mov as tipomov,
+	m.dat_mov as data,
+	mi.qtd_mov_ite as quantidade
+from
+	cliente c,
+	produto p,
+	fornecedor f,
+	movimentacao m,
+	movimentacao_item mi
+where
+	c.cod_cli = m.cod_cli
+	and m.cod_mov = mi.cod_mov
+	and p.cod_pro = mi.cod_pro
+	and f.cod_for = p.cod_for
